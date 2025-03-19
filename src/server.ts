@@ -1,26 +1,16 @@
 import fastify from 'fastify';
-import knex from 'knex';
-import { randomUUID } from 'node:crypto';
+import cookie from '@fastify/cookie';
+
 import { env } from './env';
+import { transactionsRoutes } from './routes/transactions';
 
 const app = fastify();
 
-app.get('/hello', async () => {
-  const tables = await knex('sqlite_schema')
-    .select('*')
+app.register(cookie)
 
-  return tables;
-})
-
-app.get('/transactions', async () => {
-  const transactions = await knex('transactions').insert({
-    id: randomUUID(),
-    title: 'Transação de teste',
-    amount: 1000,
-  }).returning('*')
-
-  return transactions;
-})
+app.register(transactionsRoutes, {
+  prefix: 'transactions',
+}); // É um plugin
 
 app.listen({
   port: env.PORT,
