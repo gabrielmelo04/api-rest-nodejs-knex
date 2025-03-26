@@ -83,5 +83,3 @@ export async function transactionsRoutes(app: FastifyInstance) {
   })
 
 }
-
-//Testes automatizados
